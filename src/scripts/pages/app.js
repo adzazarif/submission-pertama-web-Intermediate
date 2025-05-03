@@ -36,9 +36,33 @@ class App {
     const url = getActiveRoute();
     const page = routes[url];
 
+    if (!page) return;
+    const loadContent = async () => {
+      this.#content.classList.remove('fade-out');
+      this.#content.classList.remove('fade-in');
+
+      // await new Promise((resolve) => setTimeout(resolve, 100));
+
+      this.#content.innerHTML = await page.render();
+
+      void this.#content.offsetWidth;
+      this.#content.classList.add('fade-in');
+
+      if (typeof page.afterRender === 'function') {
+        await page.afterRender();
+      }
+
     this.#content.innerHTML = await page.render();
     await page.afterRender();
+    }
+
+    if (document.startViewTransition) {
+      document.startViewTransition(loadContent);
+    } else {
+      await loadContent();
+    }
   }
+
 }
 
 export default App;

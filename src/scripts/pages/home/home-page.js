@@ -3,6 +3,7 @@ import * as Data from "../../data/api";
 export default class HomePage {
   async render() {
     return `
+      
           <div class="hero">
             <img src="./images/hero.png" alt="">
             <div class="desc">
@@ -18,6 +19,8 @@ export default class HomePage {
       <div id="stories-list" class="stories-list">
       </div>
     </div>
+
+      
     `;
   }
 

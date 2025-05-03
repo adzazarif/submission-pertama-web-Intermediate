@@ -26,6 +26,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     navigationDrawer: document.querySelector('#navigation-drawer'),
   });
 
+  const mainContent = document.querySelector('#main-content');
+  const skipLink = document.querySelector('.skip-to-content');
+
+  skipLink.addEventListener('click', function (event) {
+    event.preventDefault(); // Mencegah refresh halaman
+    skipLink.blur(); // Menghilangkan fokus skip to content
+    mainContent.focus(); // Fokus ke konten utama
+    mainContent.scrollIntoView(); // Halaman scroll ke konten utama
+  });
+
   await app.renderPage();
   hashNav();
   window.addEventListener('hashchange', async () => {

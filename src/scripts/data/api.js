@@ -1,4 +1,5 @@
 import CONFIG from '../config';
+import { getAccessToken } from '../utils/auth';
 
 const ENDPOINTS = {
   LOGIN: `${CONFIG.BASE_URL}/login`,
@@ -9,35 +10,46 @@ const ENDPOINTS = {
 };
 
 export async function getData() {
+  const accessToken = getAccessToken();
   const fetchResponse = await fetch(`${ENDPOINTS.STORIES}?location=1`, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLUc0YlJsU2hROEpyREFmVlkiLCJpYXQiOjE3NDYyNDk1NjV9.S2XfjAEzZY1vFFZlOj-B7SYJvOeS_erZvLNRC8rTt5s`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
   return await fetchResponse.json();
 }
 
-export async function login(credentials) {
+export async function getLogin({ email, password }) {
+  const data = JSON.stringify({ email, password });
+
   const fetchResponse = await fetch(ENDPOINTS.LOGIN, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
+    headers: { 'Content-Type': 'application/json' },
+    body: data,
   });
-  return await fetchResponse.json();
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
 }
 
-export async function register(credentials) {
+export async function register({ name, email, password }) {
+  const data = JSON.stringify({ name, email, password });
+
   const fetchResponse = await fetch(ENDPOINTS.REGISTER, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(credentials),
+    headers: { 'Content-Type': 'application/json' },
+    body: data,
   });
-  return await fetchResponse.json();
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
 }
 
 export async function addStory(credentials) {

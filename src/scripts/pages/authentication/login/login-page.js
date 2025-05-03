@@ -1,5 +1,9 @@
 import { animatePageTransition } from "../../../utils";
+import LoginPresenter from "./login-presenter";
+import * as auth from "../../../utils/auth";
+import * as Data from "../../../data/api";
 export default class LoginPage {
+  #presenter = null;
   async render() {
     return `
       <section class="login-section">
@@ -13,22 +17,22 @@ export default class LoginPage {
               <!-- Pesan -->
               <div id="message-box"></div>
 
-              <form action="/cek-login" method="POST" class="form">
+              <form id="login-form" class="form">
                 <div class="form-group">
                   <label for="email">Email</label>
-                  <input type="email" name="email" id="email" placeholder="Masukkan email Anda" required />
+                  <input type="email" name="email" id="input-email" placeholder="Masukkan email Anda" required />
                 </div>
 
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" name="password" id="password" placeholder="Masukkan password Anda" required />
+                  <input type="password" name="password" id="input-password" placeholder="Masukkan password Anda" required />
                   <div class="checkbox-container">
                     <input type="checkbox" id="show-password" />
                     <label for="show-password">Tampilkan Password</label>
                   </div>
                 </div>
 
-                <button type="submit" class="btn-login">Login</button>
+                <button type="submit" id="btn-login" class="btn-login">Login</button>
 
                 <div class="login-register">
                   <p>Belum punya akun? <a href="#/register" class="switch-page">Register</a></p>
@@ -59,7 +63,22 @@ export default class LoginPage {
       });
     }
 
+    this.#presenter = new LoginPresenter(this, Data, auth);
+
+    this.#setupForm();
     this.#setupTransition();
+  }
+
+  #setupForm() {
+    document.getElementById('login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const data = {
+        email: document.getElementById('input-email').value,
+        password: document.getElementById('input-password').value,
+      };
+      await this.#presenter.getLogin(data);
+    });
   }
 
   #setupTransition() {
@@ -68,5 +87,34 @@ export default class LoginPage {
       // const container = document.querySelector('.login-section');
       animatePageTransition('/register');
     });
+  }
+
+  showSubmitButtonLoading() {
+    const submitButton = document.getElementById('btn-login');
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.innerHTML = `<span class="spinner"></span>Loading...`;
+    }
+  }
+
+    loginSuccessfully(message) {
+    console.log(message);
+
+    // Redirect
+    location.hash = '/';
+  }
+  
+  hideSubmitButtonLoading() {
+    const submitButton = document.getElementById('btn-login');
+
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = 'Login';
+    }
+  }
+
+  loginFailed(message) {
+    alert(message);
   }
 }

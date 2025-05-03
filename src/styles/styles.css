@@ -1,14 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
 * {
   margin: 0;
   padding: 0;
-
+  font-family: "Quicksand", sans-serif;
   box-sizing: border-box;
+  text-decoration: none;
 }
-
-body {
-  font-family: 'Arial', sans-serif;
+:root{
+  --orange: #FA812F;
+  --orange2: #FFB22C;
+  --yellow: #F3C623;
+  --light: #FEF3E2;
+  --box-shadow:0 .5rem 1.5rem rgba(0,0,0,.2);
+  scroll-behavior: smooth !important;
 }
-
+.button-util {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 0;
+  border-radius: 4px;
+  background-color: var(--yellow);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
 .container {
   padding-inline: 32px;
   margin-inline: auto;
@@ -16,15 +31,26 @@ body {
 }
 
 header {
-  background-color: lightskyblue;
+  background-color: transparent;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  transition: .3s;
+}
+header.scrolled {
+  background-color: rgba(243, 198, 35, 0.4);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--box-shadow);
 }
 
 .main-header {
-  min-height: 90px;
+  min-height: 40px;
   padding-block: 20px;
-
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   gap: 30px;
 }
@@ -94,11 +120,181 @@ header {
 }
 
 /* MAIN */
-.main-content {
-  padding-block: 20px;
-}
 
 /* Write your styles more here */
+
+.hero{
+  position: absolute;
+  top: 0;
+}
+.hero img{
+  width: 100%;
+  height: 74vh;
+  object-fit: cover;
+}
+.hero .desc{
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  text-align: center;
+}
+.hero .desc h1{
+  font-size: 3rem;
+  font-weight: bold;
+}
+.hero .desc p{
+  font-size: 17px;
+}
+.hero-button{
+  background-color: var(--orange);
+  color: #fff;
+  padding: 10px 20px;
+  margin-top: 15px;
+  display: inline-block;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: .3s;
+}
+.hero-button:hover{
+  background-color: #bb4b00;
+  color: #fff;
+}
+.show-stories{
+  padding: 20px;
+  margin-top: 750px;
+  z-index: 999;
+}
+.show-stories h1{
+  text-align: center;
+  margin-bottom: 20px;
+}
+.show-stories .map{
+  width: 100%;
+  height: 500px;  
+}
+
+.stories-list{
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.story-item{
+  border-radius: 5px;
+  overflow: hidden;
+  width: 300px;
+  background-color: var(--light);
+  box-shadow: var(--box-shadow);
+  padding: 15px;
+  transition: .3s;
+}
+.story-item img{
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.story-item .story-item__body h2{
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--orange);
+  margin: 10px 0;
+}
+.story-item .story-item__body p{
+  font-size: 14px;
+  overflow-x: hidden;
+  margin-bottom: 10px;
+}
+.story-item .story-item__body p i{
+  margin-right: 5px;
+}
+.story-item .story-item__footer{
+  padding: 20px;
+  text-align: center;
+}
+.story-item .story-item__footer a{
+  background-color: var(--orange);
+  color: #fff;
+  padding: 10px 20px;
+  margin-top: 15px;
+  display: inline-block;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: .3s;
+}
+.story-item .story-item__footer a:hover{
+  background-color: #bb4b00;
+  color: #fff;
+}
+.story-item:hover {
+  transform: scale(1.05); /* Zoom sedikit saat hover */
+}
+
+.popup-content{
+  background-color: var(--light);
+  border-radius: 5px;
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+}
+.popup-content h2{
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--orange);
+  margin: 0;
+}
+.popup-content p{
+  font-size: 14px;
+  margin: 0px 0px 0px 0px;
+}
+.popup-content p i{
+  margin-right: 5px;
+}
+
+
+.footer {
+  background-color: var(--yellow);
+  padding: 20px 0;
+  margin-top: 50px;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  color: #333;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+}
+
+.footer-brand {
+  font-weight: bold;
+}
+
+.footer-links a,
+.footer-socials a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover,
+.footer-socials a:hover {
+  color: #007BFF;
+}
+
+.footer-socials i {
+  font-size: 18px;
+}
 
 @media screen and (width > 1000px) {
   .navigation-drawer {

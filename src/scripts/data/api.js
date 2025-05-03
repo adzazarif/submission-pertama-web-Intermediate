@@ -11,7 +11,7 @@ const ENDPOINTS = {
 export async function getData() {
   const fetchResponse = await fetch(`${ENDPOINTS.STORIES}?location=1`, {
     headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ1c2VyLUc0YlJsU2hROEpyREFmVlkiLCJpYXQiOjE3NDYyNDk1NjV9.S2XfjAEzZY1vFFZlOj-B7SYJvOeS_erZvLNRC8rTt5s`,
+      Authorization: `Bearer`,
     },
   });
 

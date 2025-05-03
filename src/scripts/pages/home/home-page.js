@@ -5,7 +5,7 @@ export default class HomePage {
     return `
       
           <div class="hero">
-            <img src="./images/hero.png" alt="">
+            <img src="./images/hero.png" alt="foto tampilan utama yang berisi cerita">
             <div class="desc">
               <h1 class="hero-title">Mari Cerita</h1>
             <p class="hero-subtitle">Kumpulan cerita seputar kehidupan sehari-hari. Buat kamu yang sedang mencari inspirasi cerita, mari cerita</p>
@@ -46,7 +46,7 @@ export default class HomePage {
       storiesList.innerHTML += `
         <div class="story-item">
           <div class="story-item__header">
-            <img src="${story.photoUrl}" alt="story-item__header">
+            <img src="${story.photoUrl}" alt="foto ${story.name}">
           </div>
           <div class="story-item__body">
             <h2>${story.name}</h2>

@@ -18,17 +18,17 @@ export default class RegisterPage {
 
               <form id="register-form" class="form">
                  <div class="form-group">
-                  <label for="nama">Nama</label>
+                  <label for="input-nama">Nama</label>
                   <input type="text" name="nama" id="input-nama" placeholder="Masukkan nama Anda" required />
                 </div>
 
                 <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" name="email" id="input-email" placeholder="Masukkan email Anda" required />
+                  <label for="input-email">Email</label>
+                  <input type="email" name="email" id="input-email" placeholder="Masukkan email Anda" required autofocus />
                 </div>
 
                 <div class="form-group">
-                  <label for="password">Password</label>
+                  <label for="input-password">Password</label>
                   <input type="password" name="password" id="input-password" placeholder="Masukkan password Anda" required />
                   <div class="checkbox-container">
                     <input type="checkbox" id="show-password" />

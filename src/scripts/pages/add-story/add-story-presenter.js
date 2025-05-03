@@ -5,4 +5,25 @@ export default class AddStoryPresenter {
         this.#content = content;
         this.#model = model;
     }
+
+    async addStory({title, description, lat, lng}) {
+        this.#content.showSubmitButtonLoading();
+        try {
+            const response = await this.#model.addStory({ title, description, lat, lng });
+            console.log(response);
+      
+            if (!response.ok) {
+              console.error('addStory: response:', response);
+              this.#content.addStoryFailed(response.message);
+              return;
+            }
+      
+            this.#content.addStorySuccessfully(response.message);
+          } catch (error) {
+            console.log('addStory: error:', error);
+            this.#content.addStoryFailed(error.message);
+          } finally {
+            this.#content.hideSubmitButtonLoading();
+          }
+    }
 }

@@ -48,10 +48,7 @@ class App {
 
       void this.#content.offsetWidth;
       this.#content.classList.add('fade-in');
-
-      if (typeof page.afterRender === 'function') {
-        await page.afterRender();
-      }
+      
 
     this.#content.innerHTML = await page.render();
     await page.afterRender();

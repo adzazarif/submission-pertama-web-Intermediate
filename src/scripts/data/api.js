@@ -75,6 +75,15 @@ export async function addStory({ description, photo, lat, lng }) {
 }
 
 export async function getDetailStory(id) {
-  const fetchResponse = await fetch(ENDPOINTS.DETAILSTORY(id));
-  return await fetchResponse.json();
+  const accessToken = getAccessToken();
+
+  const fetchResponse = await fetch(ENDPOINTS.DETAILSTORY(id), {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
 }

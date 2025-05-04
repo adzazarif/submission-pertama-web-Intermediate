@@ -1,5 +1,6 @@
 import HomePresenter from "./home-presenter";
 import * as Data from "../../data/api";
+import { showFormattedDate } from "../../utils";
 export default class HomePage {
   async render() {
     return `
@@ -51,7 +52,7 @@ export default class HomePage {
           <div class="story-item__body">
             <h2>${story.name}</h2>
             <p>${shortDesc}</p>
-            <p><i class="fa-solid fa-calendar"></i> ${story.createdAt}</p>
+            <p><i class="fa-solid fa-calendar"></i> ${showFormattedDate(story.createdAt)}</p>
           </div>
           <div class="story-item__footer">
             <a href="#/detail-story/${story.id}">Read More</a>
@@ -78,7 +79,7 @@ export default class HomePage {
         <div class="popup-content">
           <h2>${story.name}</h2>
           <p>${story.description}</p>
-          <p style="margin-bottom: 10px"><i class="fa-solid fa-calendar"></i> ${story.createdAt}</p>
+          <p style="margin-bottom: 10px"><i class="fa-solid fa-calendar"></i> ${showFormattedDate(story.createdAt)}</p>
           <a href="#/detail-story/${story.id}" class="button-util">Read More</a>
         </div>
       `);

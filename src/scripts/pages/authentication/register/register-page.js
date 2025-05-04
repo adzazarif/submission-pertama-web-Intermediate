@@ -60,7 +60,15 @@ export default class RegisterPage {
     async afterRender() {
         // Do your job here
         this.#presenter = new RegisterPresenter(this, Data);
-
+        const checkbox = document.getElementById("show-password");
+        const passwordInput = document.getElementById("input-password");
+    
+        if (checkbox && passwordInput) {
+          checkbox.addEventListener("change", function () {
+            passwordInput.type = this.checked ? "text" : "password";
+          });
+        }
+        
         this.#setupForm();
         this.#setupTransition();
     }

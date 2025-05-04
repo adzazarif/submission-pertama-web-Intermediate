@@ -38,6 +38,7 @@ export default class DetailStoryPage {
 
     showDataStory(story) {
         document.querySelector('#story-photo').src = story.photoUrl;
+        document.querySelector('#story-photo').alt = story.name;
         document.querySelector('#desc-text').innerHTML = story.description;
         document.querySelector('#desc-username').innerHTML = `<i class="fa-solid fa-user"></i> Nama:  ${story.name}`;
         document.querySelector('#desc-createdAt').innerHTML = `<i class="fa-solid fa-calendar"></i> Tanggal:  ${showFormattedDate(story.createdAt)}`;
@@ -50,6 +51,7 @@ export default class DetailStoryPage {
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
-        L.marker([story.lat, story.lon]).addTo(map);
+        const marker = L.marker([story.lat, story.lon]);
+        marker.addTo(map).bindPopup(`<p>${story.name}</p>`).openPopup();
     }
 }

@@ -42,16 +42,19 @@ class App {
       this.#content.classList.remove('fade-out');
       this.#content.classList.remove('fade-in');
 
-      // await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       this.#content.innerHTML = await page.render();
 
       void this.#content.offsetWidth;
       this.#content.classList.add('fade-in');
-      
+
 
     this.#content.innerHTML = await page.render();
-    await page.afterRender();
+
+    if (typeof page.afterRender === 'function') {
+      await page.afterRender();
+    }
     }
 
     if (document.startViewTransition) {

@@ -22,7 +22,7 @@ export default class LoginPresenter {
       
             this.#authModel.putAccessToken(response.loginResult.token);
       
-            this.#content.loginSuccessfully(response.message, response.data);
+            this.#content.loginSuccessfully();
           } catch (error) {
             console.log('getLogin: error:', error);
             this.#content.loginFailed(error.message);

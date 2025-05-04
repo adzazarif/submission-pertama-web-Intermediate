@@ -1,23 +1,25 @@
-import CONFIG from '../config';
+import { BASE_URL } from '../config';
 import { getAccessToken } from '../utils/auth';
 
 const ENDPOINTS = {
-  LOGIN: `${CONFIG.BASE_URL}/login`,
-  REGISTER: `${CONFIG.BASE_URL}/register`,
-  STORIES: `${CONFIG.BASE_URL}/stories`,
-  DETAILSTORY: (id) => `${CONFIG.BASE_URL}/stories/${id}`,
-  getAllStoriesGuest: `${CONFIG.BASE_URL}/stories/guest`,
+  LOGIN: `${BASE_URL}/login`,
+  REGISTER: `${BASE_URL}/register`,
+  STORIES: `${BASE_URL}/stories`,
+  DETAILSTORY: (id) => `${BASE_URL}/stories/${id}`,
 };
 
 export async function getData() {
   const accessToken = getAccessToken();
-  const fetchResponse = await fetch(`${ENDPOINTS.STORIES}?location=1`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
 
-  return await fetchResponse.json();
+  const fetchResponse = await fetch(ENDPOINTS.STORIES, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
 }
 
 export async function getLogin({ email, password }) {

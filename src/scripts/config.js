@@ -1,6 +1,3 @@
-const CONFIG = {
-  BASE_URL: 'https://story-api.dicoding.dev/v1',
-  AUTH_TOKEN: 'auth_token',
-};
+export const ACCESS_TOKEN_KEY = 'accessToken';
 
-export default CONFIG;
+export const BASE_URL = 'https://story-api.dicoding.dev/v1';

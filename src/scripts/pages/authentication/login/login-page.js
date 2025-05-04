@@ -55,7 +55,7 @@ export default class LoginPage {
 
   async afterRender() {
     const checkbox = document.getElementById("show-password");
-    const passwordInput = document.getElementById("password");
+    const passwordInput = document.getElementById("input-password");
 
     if (checkbox && passwordInput) {
       checkbox.addEventListener("change", function () {
@@ -98,11 +98,10 @@ export default class LoginPage {
     }
   }
 
-    loginSuccessfully(message) {
-    console.log(message);
-
+    loginSuccessfully() {
+      alert("Login Berhasil");
     // Redirect
-    location.hash = '/';
+      location.hash = '/';
   }
   
   hideSubmitButtonLoading() {

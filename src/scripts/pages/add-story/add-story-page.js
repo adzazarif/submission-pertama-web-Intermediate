@@ -51,7 +51,7 @@ export default class AddStoryPage {
               </div>
 
               <div class="form-map">
-                  <label for="location">Lokasi</label>
+                  <label >Lokasi</label>
                   <div class="map-container">
                   <button id="get-location" class="btn-orange">Lokasi Saya</button>
                   <div id="info-map" class="info-map">
@@ -61,11 +61,11 @@ export default class AddStoryPage {
                   <div class="koordinat">
                       <div style="width: 50%">
                           <label for="input-latitude">Latitude</label>
-                          <input type="text" name="input-latitude" id="latitude" readonly />
+                          <input type="text" name="latitude" id="input-latitude" readonly />
                       </div>
                       <div style="width: 50%">
                           <label for="input-longitude">Longitude</label>
-                          <input type="text" name="input-longitude" id="longitude" readonly />
+                          <input type="text" name="longitude" id="input-longitude" readonly />
                       </div>
                   </div>
               </div>

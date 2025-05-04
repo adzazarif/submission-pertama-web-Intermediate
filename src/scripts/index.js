@@ -3,6 +3,7 @@ import '../styles/styles.css';
 import { getActiveRoute } from './routes/url-parser';
 import App from './pages/app';
 import Camera from './utils/camera';
+import { getLogout } from './utils/auth';
 function hashNav() {
   const header = document.getElementById('header');
   const footer = document.getElementById('footer');
@@ -20,6 +21,7 @@ function hashNav() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+
   const app = new App({
     content: document.querySelector('#main-content'),
     drawerButton: document.querySelector('#drawer-button'),
@@ -35,11 +37,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     mainContent.focus(); // Fokus ke konten utama
     mainContent.scrollIntoView(); // Halaman scroll ke konten utama
   });
-
-  await app.renderPage();
   hashNav();
+  await app.renderPage();
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
+    console.log("berubah");
+    
+    if (location.hash === '#/logout') {
+      const confirmLogout = confirm('Apakah kamu yakin ingin keluar?');
+
+      if (confirmLogout) {
+        getLogout();
+        window.location.hash = '/login';
+        hashNav();
+      } else {
+        window.history.back();
+      }
+    }
+
+  hashNav();
     // Stop all active media
     Camera.stopAllStreams();
   });

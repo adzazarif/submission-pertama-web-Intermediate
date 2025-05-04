@@ -8,10 +8,21 @@ export default class HomePresenter {
     }
 
     async loadData() {
-        const stories = await this.#model.getData();
-        console.log(stories.listStory);
-        
-        this.#content.showStories(stories.listStory);
-        this.#content.showMap(stories.listStory);
+        this.#content.showLoading();
+       try {
+           const response = await this.#model.getData();
+           
+           if (!response.ok) {
+             console.error('getStories: response:', response);
+             return;
+           }
+           
+           this.#content.showStories(response.listStory);
+           this.#content.showMap(response.listStory);
+       } catch (error) {
+           console.log('getStories: error:', error);
+       } finally {
+           this.#content.hideLoading();
+       }
     }
 }

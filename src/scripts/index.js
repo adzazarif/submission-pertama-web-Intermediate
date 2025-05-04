@@ -2,7 +2,7 @@
 import '../styles/styles.css';
 import { getActiveRoute } from './routes/url-parser';
 import App from './pages/app';
-
+import Camera from './utils/camera';
 function hashNav() {
   const header = document.getElementById('header');
   const footer = document.getElementById('footer');
@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   hashNav();
   window.addEventListener('hashchange', async () => {
     await app.renderPage();
+    // Stop all active media
+    Camera.stopAllStreams();
   });
 
     window.addEventListener('scroll', function () {

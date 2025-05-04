@@ -2,11 +2,14 @@ import AddStoryPresenter from "./add-story-presenter"
 import * as Data from "../../data/api";
 import { convertBase64ToBlob } from "../../utils";
 import Camera from "../../utils/camera";
+import CONFIG from "../../config";
 export default class AddStoryPage {
     #presenter;
     #camera;
     #form;
-    #takenPicture = false;
+    #takenPicture;
+    #lat;
+    #lng;
     async render() {
         return `
              <div class="page-container">
@@ -27,7 +30,7 @@ export default class AddStoryPage {
                   <small>Abadikan moment terindah Anda melalui cerita ini</small>
                   <div class="btn-cam">
                   <button id="upload-photo" class="btn-orange">Upload Gambar Dari Perangkat anda</button>
-                  <input type="file" name="photo" id="input-photo" />
+                  <input type="file" name="photo" accept="image/*" id="input-photo" />
                   <button id="preview-cam" class="btn-light">Buka Kamera</button>
                   </div>
 
@@ -43,7 +46,7 @@ export default class AddStoryPage {
                   
                   <canvas id="canvas"></canvas>
                   <img id="preview-image" alt="Preview Image" class="preview-image" />
-                  <button id="remove-image" class="btn-light">Hapus Gambar</button>
+                  <button id="remove-image" type="button" class="btn-light">Hapus Gambar</button>
               </div>
               </div>
 
@@ -57,12 +60,12 @@ export default class AddStoryPage {
                   <div id="map" class="map-form"></div></div>
                   <div class="koordinat">
                       <div style="width: 50%">
-                          <label for="latitude">Latitude</label>
-                          <input type="text" name="latitude" id="latitude" readonly />
+                          <label for="input-latitude">Latitude</label>
+                          <input type="text" name="input-latitude" id="latitude" readonly />
                       </div>
                       <div style="width: 50%">
-                          <label for="longitude">Longitude</label>
-                          <input type="text" name="longitude" id="longitude" readonly />
+                          <label for="input-longitude">Longitude</label>
+                          <input type="text" name="input-longitude" id="longitude" readonly />
                       </div>
                   </div>
               </div>
@@ -77,8 +80,7 @@ export default class AddStoryPage {
     async afterRender() {
         // Do your job here
         this.#presenter = new AddStoryPresenter(this, Data);
-        this.#takenPicture = [];
-
+        
         this.#showUploadPhoto();
         this.#setupForm();
         this.#setupMap();
@@ -91,22 +93,25 @@ export default class AddStoryPage {
 
           const data = {
             description: document.getElementById('input-description').value,
-            photo: document.getElementById('input-photo').files[0],
-            latitude: document.getElementById('latitude').value,
-            longitude: document.getElementById('longitude').value,
-            takenPicture: this.#takenPicture,
+            photo: this.#takenPicture[0].blob,
+            lat: this.#lat,
+            lng: this.#lng
           }
-        //   this.#presenter.addStory();
+          this.#presenter.addStory(data);
         });
 
         const preview = document.getElementById('preview');
         document.getElementById('preview-cam').addEventListener('click', async (event) => {
           event.preventDefault();
           preview.classList.add('active');
-            this.#setupCamera();
-            await this.#camera.launch();
-            return
+        
+          // Tampilkan elemen kamera
+          this.#toggleCameraElements(true);
+        
+          this.#setupCamera();
+          await this.#camera.launch();
         });
+        
 
         document.getElementById('button-stop').addEventListener('click', async (event) => {
           event.preventDefault();
@@ -126,9 +131,13 @@ export default class AddStoryPage {
     
         this.#camera.addCheeseButtonListener('#button-capture', async () => {
           const image = await this.#camera.takePicture();
+          this.#takenPicture = [];
           await this.#addTakenPicture(image);
           await this.#populateTakenPictures();
+          
         });
+
+        
       }
     
       async #addTakenPicture(image) {
@@ -144,71 +153,118 @@ export default class AddStoryPage {
         this.#takenPicture = [...this.#takenPicture, newDocumentation];
       }
 
-      #showPreview(imageURL) {
+      #showPreview(imageURL, imageId) {
         const btnRemove = document.getElementById('remove-image');
-        const preview = document.getElementById('preview-image');
-        preview.src = imageURL;
-        preview.style.display = 'block';
+        const previewImage = document.getElementById('preview-image');
+        const preview = document.getElementById('preview');
+        
+        preview.classList.add('active');
+        previewImage.src = imageURL;
+        previewImage.style.display = 'block';
         btnRemove.style.display = 'block';
+        
+        btnRemove.dataset.deletepictureid = imageId;
       }
+      
     
       async #populateTakenPictures() {
-        this.#takenPicture.reduce((accumulator, picture) => {
-          const imageUrl = URL.createObjectURL(picture.blob);
-          return this.#showPreview(imageUrl);
-        }, '');
-    
+        const previewImg = document.getElementById('preview-image');
+        const btnRemove = document.getElementById('remove-image');
+      
+        if (this.#takenPicture.length === 0) {
+          previewImg.style.display = 'none';
+          btnRemove.style.display = 'none';
+          previewImg.src = '';
+          return;
+        }
         
-    
-        document.querySelectorAll('button[data-deletepictureid]').forEach((button) =>
-          button.addEventListener('click', (event) => {
-            const pictureId = event.currentTarget.dataset.deletepictureid;
-    
-            const deleted = this.#removePicture(pictureId);
-            if (!deleted) {
-              console.log(`Picture with id ${pictureId} was not found`);
-            }
-    
-            // Updating taken pictures
-            this.#populateTakenPictures();
-          }),
-        );
+        
+        const picture = this.#takenPicture[0]; 
+        const imageUrl = URL.createObjectURL(picture.blob);
+        this.#showPreview(imageUrl, picture.id);
+      
+        btnRemove.onclick = () => {
+          this.#removePicture(picture.id);
+          this.#populateTakenPictures(); 
+          document.getElementById('input-photo').value = ''; 
+        };
       }
+      
+      #toggleCameraElements(show) {
+        const display = show ? 'block' : 'none';
+        document.getElementById('video').style.display = display;
+        document.getElementById('options-camera').style.display = display;
+        document.querySelector('.video-controls').style.display = show ? 'flex' : 'none';
+      }      
+      
     
       #removePicture(id) {
-        const selectedPicture = this.#takenPicture.find((picture) => {
-          return picture.id == id;
-        });
-    
-        // Check if founded selectedPicture is available
-        if (!selectedPicture) {
-          return null;
-        }
-    
-        // Deleting selected selectedPicture from takenPictures
-        this.#takenPicture = this.#takenPicture.filter((picture) => {
-          return picture.id != selectedPicture.id;
-        });
-    
+        const selectedPicture = this.#takenPicture.find(picture => picture.id === id);
+        if (!selectedPicture) return null;
+      
+        this.#takenPicture = this.#takenPicture.filter(picture => picture.id !== id);
         return selectedPicture;
       }
+      
 
       #showUploadPhoto() {
         const btnUploadPhoto = document.getElementById('upload-photo');
         const inputPhoto = document.getElementById('input-photo');
-
-        btnUploadPhoto.addEventListener('click', () => {
+      
+        btnUploadPhoto.addEventListener('click', (event) => {
+          event.preventDefault();
           inputPhoto.click();
         });
+      
+        inputPhoto.addEventListener('change', async (event) => {
+          const file = event.target.files[0];
+          if (!file) return;
+      
+          // Kosongkan kamera
+          this.#takenPicture = [];
+      
+
+          this.#toggleCameraElements(false);
+      
+          // Buat blob URL dari file
+          const imageBlob = file instanceof Blob ? file : await convertBase64ToBlob(file, 'image/png');
+      
+          const newDocumentation = {
+            id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+            blob: imageBlob,
+          };
+      
+          this.#takenPicture.push(newDocumentation);
+          await this.#populateTakenPictures();
+        });
       }
+      
 
       #setupMap() {
         const map = L.map('map').setView([-6.175, 106.827], 12);
       
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        // Layer OpenStreetMap
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
+        });
       
+        // Layer MapTiler
+        const mapTilerLayer = L.tileLayer('https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=O1ZJB6XuHzgTSPNwgD5a', {
+          attribution: '&copy; <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> &copy; OpenStreetMap contributors',
+        });
+      
+        // Tambahkan layer OSM sebagai default
+        osmLayer.addTo(map);
+      
+        // Kontrol untuk memilih base layer
+        const baseLayers = {
+          "OpenStreetMap": osmLayer,
+          "MapTiler": mapTilerLayer
+        };
+      
+        L.control.layers(baseLayers).addTo(map);
+      
+        // Sisa kode map (lokasi, marker, dsb.)
         const getLocationButton = document.getElementById('get-location');
         const latitudeInput = document.getElementById('latitude');
         const longitudeInput = document.getElementById('longitude');
@@ -217,12 +273,14 @@ export default class AddStoryPage {
         const mapText = document.getElementById('info-map-text');
         mapText.innerHTML = 'Silahkan klik tombol di atas ini untuk mendapatkan lokasi Anda.';
       
-        let marker; 
-
+        let marker;
+      
         map.on('click', (e) => {
           const { lat, lng } = e.latlng;
           latitudeInput.value = lat.toFixed(6);
           longitudeInput.value = lng.toFixed(6);
+          this.#lat = lat.toFixed(6);
+          this.#lng = lng.toFixed(6);
       
           if (marker) {
             marker.setLatLng(e.latlng);
@@ -246,6 +304,8 @@ export default class AddStoryPage {
       
               latitudeInput.value = latitude.toFixed(6);
               longitudeInput.value = longitude.toFixed(6);
+              this.#lat = latitude.toFixed(6);
+              this.#lng = longitude.toFixed(6);
       
               const latlng = L.latLng(latitude, longitude);
       
@@ -269,6 +329,34 @@ export default class AddStoryPage {
             }
           );
         });
+      }
+
+      showSubmitButtonLoading() {
+        const submitButton = document.getElementById('btn-add-story');
+    
+        if (submitButton) {
+          submitButton.disabled = true;
+          submitButton.innerHTML = `<span class="spinner"></span>Loading...`;
+        }
+      }
+      hideSubmitButtonLoading() {
+        const submitButton = document.getElementById('btn-add-story');
+    
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.innerHTML = 'Tambah Cerita';
+        }
+      }
+      
+      addStorySuccessfully(message) {
+        alert(message);
+
+        // Redirect
+        location.hash = '/';
+      }
+
+      addStoryFailed(message) {
+        alert(message);
       }
       
       

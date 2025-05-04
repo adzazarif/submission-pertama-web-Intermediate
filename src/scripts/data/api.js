@@ -52,16 +52,26 @@ export async function register({ name, email, password }) {
   };
 }
 
-export async function addStory(credentials) {
+export async function addStory({ description, photo, lat, lng }) {
+  const accessToken = getAccessToken();
+
+  const formData = new FormData();
+  formData.set('description', description);
+  formData.set('lat', lat);
+  formData.set('lon', lng);
+  formData.set('photo', photo);
+
   const fetchResponse = await fetch(ENDPOINTS.STORIES, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${credentials.token}`,
-    },
-    body: JSON.stringify(credentials),
+    headers: { Authorization: `Bearer ${accessToken}` },
+    body: formData,
   });
-  return await fetchResponse.json();
+  const json = await fetchResponse.json();
+
+  return {
+    ...json,
+    ok: fetchResponse.ok,
+  };
 }
 
 export async function getDetailStory(id) {

@@ -18,6 +18,7 @@ export default class HomePage {
     <h1>Latest Story</h1>
       <div id="map" class="map"></div>
       <div id="stories-list" class="stories-list">
+      
       </div>
     </div>
 

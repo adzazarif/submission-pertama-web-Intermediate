@@ -266,8 +266,8 @@ export default class AddStoryPage {
       
         // Sisa kode map (lokasi, marker, dsb.)
         const getLocationButton = document.getElementById('get-location');
-        const latitudeInput = document.getElementById('latitude');
-        const longitudeInput = document.getElementById('longitude');
+        const latitudeInput = document.getElementById('input-latitude');
+        const longitudeInput = document.getElementById('input-longitude');
       
         const mapInfo = document.getElementById('info-map');
         const mapText = document.getElementById('info-map-text');

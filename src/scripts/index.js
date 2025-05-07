@@ -9,9 +9,7 @@ function hashNav() {
   const footer = document.getElementById('footer');
   const activeRoute = getActiveRoute();
   console.log(activeRoute);
-  
-  if (activeRoute === '/login' || activeRoute === '/register') {
-    
+  if (activeRoute === '/login' || activeRoute === '/register') {    
     header.style.display = 'none';
     footer.style.display = 'none';
   } else {

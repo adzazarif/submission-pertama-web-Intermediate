@@ -6,6 +6,7 @@ import Camera from "./utils/camera";
 import { getLogout } from "./utils/auth";
 import { getAccessToken } from "./utils/auth";
 function hashNav() {
+<<<<<<< HEAD
   const header = document.getElementById("header");
   const footer = document.getElementById("footer");
 
@@ -14,6 +15,15 @@ function hashNav() {
   if (isLogin) {
     header.style.display = "block";
     footer.style.display = "block";
+=======
+  const header = document.getElementById('header');
+  const footer = document.getElementById('footer');
+  const activeRoute = getActiveRoute();
+  console.log(activeRoute);
+  if (activeRoute === '/login' || activeRoute === '/register') {    
+    header.style.display = 'none';
+    footer.style.display = 'none';
+>>>>>>> 3b797c7cc25c2a819a3f2e9a3ced1a83334bb782
   } else {
     header.style.display = "none";
     footer.style.display = "none";

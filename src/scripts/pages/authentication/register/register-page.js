@@ -1,10 +1,9 @@
-import { animatePageTransition } from "../../../utils";
 import RegisterPresenter from "./register-presenter";
 import * as Data from "../../../data/api";
 export default class RegisterPage {
   #presenter;
-    async render() {
-        return `
+  async render() {
+    return `
             <section class="login-section">
         <div class="login">
           <div class="login-container">
@@ -55,71 +54,64 @@ export default class RegisterPage {
         </div>
       </section>
         `;
+  }
+
+  async afterRender() {
+    // Do your job here
+    this.#presenter = new RegisterPresenter(this, Data);
+    const checkbox = document.getElementById("show-password");
+    const passwordInput = document.getElementById("input-password");
+
+    if (checkbox && passwordInput) {
+      checkbox.addEventListener("change", function () {
+        passwordInput.type = this.checked ? "text" : "password";
+      });
     }
 
-    async afterRender() {
-        // Do your job here
-        this.#presenter = new RegisterPresenter(this, Data);
-        const checkbox = document.getElementById("show-password");
-        const passwordInput = document.getElementById("input-password");
-    
-        if (checkbox && passwordInput) {
-          checkbox.addEventListener("change", function () {
-            passwordInput.type = this.checked ? "text" : "password";
-          });
-        }
-        
-        this.#setupForm();
-        this.#setupTransition();
-    }
+    this.#setupForm();
+  }
 
-    #setupForm() {
-      document.getElementById('register-form').addEventListener('submit', async (event) => {
+  #setupForm() {
+    document
+      .getElementById("register-form")
+      .addEventListener("submit", async (event) => {
         event.preventDefault();
-  
+
         const data = {
-          name: document.getElementById('input-nama').value,
-          email: document.getElementById('input-email').value,
-          password: document.getElementById('input-password').value,
+          name: document.getElementById("input-nama").value,
+          email: document.getElementById("input-email").value,
+          password: document.getElementById("input-password").value,
         };
         await this.#presenter.getRegister(data);
       });
-      }
+  }
 
-      #setupTransition() {
-        document.querySelector('.switch-page').addEventListener('click', (event) => {
-          event.preventDefault();
-          // const container = document.querySelector('.login-section');
-          animatePageTransition('/login');
-        });
-      }
+  registerFailed(message) {
+    alert(message);
+  }
 
-      registerFailed(message) {
-        alert(message);
-      }
+  registerSuccessfully(message) {
+    alert(message);
 
-      registerSuccessfully(message) {
-        alert(message);
+    // Redirect
+    location.hash = "/login";
+  }
 
-        // Redirect
-        location.hash = '/login';
-      }
+  hideSubmitButtonLoading() {
+    const submitButton = document.getElementById("btn-register");
 
-      hideSubmitButtonLoading() {
-        const submitButton = document.getElementById('btn-register');
-    
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.innerHTML = 'Login';
-        }
-      }
+    if (submitButton) {
+      submitButton.disabled = false;
+      submitButton.innerHTML = "Login";
+    }
+  }
 
-      showSubmitButtonLoading() {
-        const submitButton = document.getElementById('btn-register');
-    
-        if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.innerHTML = `<span class="spinner"></span>Loading...`;
-        }
-      }
+  showSubmitButtonLoading() {
+    const submitButton = document.getElementById("btn-register");
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.innerHTML = `<span class="spinner"></span>Loading...`;
+    }
+  }
 }

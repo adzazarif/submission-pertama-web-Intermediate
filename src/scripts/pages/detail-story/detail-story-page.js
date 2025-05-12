@@ -3,9 +3,9 @@ import { parseActivePathname } from "../../routes/url-parser";
 import * as Data from "../../data/api";
 import { showFormattedDate } from "../../utils";
 export default class DetailStoryPage {
-    #presenter;
-    async render() {
-        return `
+  #presenter;
+  async render() {
+    return `
         <div class="page-container">
             <div class="page-header">
                 <h1>Detail Cerita</h1>
@@ -27,31 +27,45 @@ export default class DetailStoryPage {
             </div>
         </div>
         `;
-    }
-    async afterRender() {
-        // Do your job here
-        this.#presenter = new DetailStoryPresenter( parseActivePathname().id, this, Data);
+  }
+  async afterRender() {
+    // Do your job here
+    this.#presenter = new DetailStoryPresenter(
+      parseActivePathname().id,
+      this,
+      Data
+    );
 
-        await this.#presenter.getDetailStory();
+    await this.#presenter.getDetailStory();
+  }
 
-    }
+  showDataStory(story) {
+    document.querySelector("#story-photo").src = story.photoUrl;
+    document.querySelector("#story-photo").alt = story.name;
+    document.querySelector("#desc-text").innerHTML = story.description;
+    document.querySelector(
+      "#desc-username"
+    ).innerHTML = `<i class="fa-solid fa-user"></i> Nama:  ${story.name}`;
+    document.querySelector(
+      "#desc-createdAt"
+    ).innerHTML = `<i class="fa-solid fa-calendar"></i> Tanggal:  ${showFormattedDate(
+      story.createdAt
+    )}`;
+    document.querySelector(
+      "#lat"
+    ).innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lat}`;
+    document.querySelector(
+      "#lon"
+    ).innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lon}`;
+  }
 
-    showDataStory(story) {
-        document.querySelector('#story-photo').src = story.photoUrl;
-        document.querySelector('#story-photo').alt = story.name;
-        document.querySelector('#desc-text').innerHTML = story.description;
-        document.querySelector('#desc-username').innerHTML = `<i class="fa-solid fa-user"></i> Nama:  ${story.name}`;
-        document.querySelector('#desc-createdAt').innerHTML = `<i class="fa-solid fa-calendar"></i> Tanggal:  ${showFormattedDate(story.createdAt)}`;
-        document.querySelector('#lat').innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lat}`;
-        document.querySelector('#lon').innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lon}`;
-    }
-
-    setupMap(story) {
-        const map = L.map('map').setView([story.lat, story.lon], 15);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(map);
-        const marker = L.marker([story.lat, story.lon]);
-        marker.addTo(map).bindPopup(`<p>${story.name}</p>`).openPopup();
-    }
+  setupMap(story) {
+    const map = L.map("map").setView([story.lat, story.lon], 15);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+    const marker = L.marker([story.lat, story.lon]);
+    marker.addTo(map).bindPopup(`<p>${story.name}</p>`).openPopup();
+  }
 }

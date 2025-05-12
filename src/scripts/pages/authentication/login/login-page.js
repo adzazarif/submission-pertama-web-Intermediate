@@ -1,4 +1,4 @@
-import { animatePageTransition } from "../../../utils";
+// import { animatePageTransition } from "../../../utils";
 import LoginPresenter from "./login-presenter";
 import * as auth from "../../../utils/auth";
 import * as Data from "../../../data/api";
@@ -66,31 +66,24 @@ export default class LoginPage {
     this.#presenter = new LoginPresenter(this, Data, auth);
 
     this.#setupForm();
-    this.#setupTransition();
   }
 
   #setupForm() {
-    document.getElementById('login-form').addEventListener('submit', async (event) => {
-      event.preventDefault();
+    document
+      .getElementById("login-form")
+      .addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-      const data = {
-        email: document.getElementById('input-email').value,
-        password: document.getElementById('input-password').value,
-      };
-      await this.#presenter.getLogin(data);
-    });
-  }
-
-  #setupTransition() {
-    document.querySelector('.switch-page').addEventListener('click', (event) => {
-      event.preventDefault();
-      // const container = document.querySelector('.login-section');
-      animatePageTransition('/register');
-    });
+        const data = {
+          email: document.getElementById("input-email").value,
+          password: document.getElementById("input-password").value,
+        };
+        await this.#presenter.getLogin(data);
+      });
   }
 
   showSubmitButtonLoading() {
-    const submitButton = document.getElementById('btn-login');
+    const submitButton = document.getElementById("btn-login");
 
     if (submitButton) {
       submitButton.disabled = true;
@@ -98,18 +91,18 @@ export default class LoginPage {
     }
   }
 
-    loginSuccessfully() {
-      alert("Login Berhasil");
+  loginSuccessfully() {
+    alert("Login Berhasil");
     // Redirect
-      location.hash = '/';
+    location.hash = "/";
   }
-  
+
   hideSubmitButtonLoading() {
-    const submitButton = document.getElementById('btn-login');
+    const submitButton = document.getElementById("btn-login");
 
     if (submitButton) {
       submitButton.disabled = false;
-      submitButton.innerHTML = 'Login';
+      submitButton.innerHTML = "Login";
     }
   }
 

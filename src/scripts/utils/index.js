@@ -41,11 +41,3 @@ export function convertBase64ToUint8Array(base64String) {
 export function sleep(time = 1000) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
-
-export function animatePageTransition(targetPage) {
-  const container = document.querySelector('#main-content');
-  container.classList.add('fade-out');
-  setTimeout(() => {
-    location.hash = targetPage;
-  }, 400);
-}

@@ -2,6 +2,7 @@ import DetailStoryPresenter from "./detail-story-presenter";
 import { parseActivePathname } from "../../routes/url-parser";
 import * as Data from "../../data/api";
 import { showFormattedDate } from "../../utils";
+import { isCurrentPushSubscriptionAvailable } from "../../utils/notification-helper";
 export default class DetailStoryPage {
   #presenter;
   async render() {
@@ -21,6 +22,7 @@ export default class DetailStoryPage {
                         <p id="desc-createdAt"> </p>
                         <p id="lat"></p>
                         <p id="lon"></p>
+                        <button id="report-detail-notify-me" type="button" class="btn-orange">Notify Me</button>
                     </div>
                     <div id="map" class="detail-map"></div>
                 </div>
@@ -36,7 +38,22 @@ export default class DetailStoryPage {
       Data
     );
 
+    await this.disableNotifyMeButton();
+
     await this.#presenter.getDetailStory();
+  }
+
+  async disableNotifyMeButton() {
+    document.getElementById("report-detail-notify-me");
+    const isSubscribed = await isCurrentPushSubscriptionAvailable();
+    if (!isSubscribed) {
+      console.log("disableNotifyMeButton");
+      
+      const button = document.getElementById("report-detail-notify-me");
+      button.disabled = true;
+      button.style.backgroundColor = "grey";
+      button.style.cursor = "not-allowed";
+    }
   }
 
   showDataStory(story) {
@@ -57,6 +74,8 @@ export default class DetailStoryPage {
     document.querySelector(
       "#lon"
     ).innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lon}`;
+    
+    this.addNotifyMeEventListener();
   }
 
   setupMap(story) {
@@ -67,5 +86,11 @@ export default class DetailStoryPage {
     }).addTo(map);
     const marker = L.marker([story.lat, story.lon]);
     marker.addTo(map).bindPopup(`<p>${story.name}</p>`).openPopup();
+  }
+
+  addNotifyMeEventListener() {
+    document.getElementById('report-detail-notify-me').addEventListener('click', () => {
+      this.#presenter.notifyMe();
+    });
   }
 }

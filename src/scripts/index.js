@@ -1,34 +1,11 @@
 // CSS imports
 import "../styles/styles.css";
-import { getActiveRoute } from "./routes/url-parser";
 import App from "./pages/app";
 import Camera from "./utils/camera";
 import { getLogout } from "./utils/auth";
-import { getAccessToken } from "./utils/auth";
-function hashNav() {
-<<<<<<< HEAD
-  const header = document.getElementById("header");
-  const footer = document.getElementById("footer");
 
-  const isLogin = !!getAccessToken();
+import { registerServiceWorker } from './utils';
 
-  if (isLogin) {
-    header.style.display = "block";
-    footer.style.display = "block";
-=======
-  const header = document.getElementById('header');
-  const footer = document.getElementById('footer');
-  const activeRoute = getActiveRoute();
-  console.log(activeRoute);
-  if (activeRoute === '/login' || activeRoute === '/register') {    
-    header.style.display = 'none';
-    footer.style.display = 'none';
->>>>>>> 3b797c7cc25c2a819a3f2e9a3ced1a83334bb782
-  } else {
-    header.style.display = "none";
-    footer.style.display = "none";
-  }
-}
 
 document.addEventListener("DOMContentLoaded", async () => {
   const app = new App({
@@ -47,10 +24,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     mainContent.focus(); // Fokus ke konten utama
     mainContent.scrollIntoView(); // Halaman scroll ke konten utama
   });
-  hashNav();
+  await registerServiceWorker();
   window.addEventListener("hashchange", async () => {
     await app.renderPage();
-    hashNav();
     // Stop all active media
     Camera.stopAllStreams();
   });
@@ -62,7 +38,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (confirmLogout) {
         getLogout();
         window.location.hash = "/login";
-        hashNav();
       } else {
         window.history.back();
       }

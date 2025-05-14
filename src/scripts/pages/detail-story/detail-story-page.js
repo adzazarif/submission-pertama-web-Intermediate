@@ -3,6 +3,7 @@ import { parseActivePathname } from "../../routes/url-parser";
 import * as Data from "../../data/api";
 import { showFormattedDate } from "../../utils";
 import { isCurrentPushSubscriptionAvailable } from "../../utils/notification-helper";
+import Database from '../../database';
 export default class DetailStoryPage {
   #presenter;
   async render() {
@@ -22,7 +23,10 @@ export default class DetailStoryPage {
                         <p id="desc-createdAt"> </p>
                         <p id="lat"></p>
                         <p id="lon"></p>
+                       <div style="display: flex; justify-content: flex-end;gap: 10px">
                         <button id="report-detail-notify-me" type="button" class="btn-orange">Notify Me</button>
+                        <div id="save-action-container"></div>
+                       </div>
                     </div>
                     <div id="map" class="detail-map"></div>
                 </div>
@@ -35,11 +39,13 @@ export default class DetailStoryPage {
     this.#presenter = new DetailStoryPresenter(
       parseActivePathname().id,
       this,
-      Data
+      Data,
+      Database
     );
 
-    await this.disableNotifyMeButton();
 
+    await this.disableNotifyMeButton();
+    await this.#presenter.showSaveButton();
     await this.#presenter.getDetailStory();
   }
 
@@ -74,7 +80,7 @@ export default class DetailStoryPage {
     document.querySelector(
       "#lon"
     ).innerHTML = `<i class="fa-solid fa-location-dot"></i> Latitude: ${story.lon}`;
-    
+
     this.addNotifyMeEventListener();
   }
 
@@ -92,5 +98,38 @@ export default class DetailStoryPage {
     document.getElementById('report-detail-notify-me').addEventListener('click', () => {
       this.#presenter.notifyMe();
     });
+  }
+
+  addSaveToBookmarkEventListener() {
+    document.getElementById('save-action-container').innerHTML = `
+      <button id="report-detail-save" type="button" class="btn-orange">Save to Bookmark</button>
+    `;
+    document.getElementById('report-detail-save').addEventListener('click', async () => {
+      await this.#presenter.saveReport();
+      await this.#presenter.showSaveButton();
+    });
+  }
+
+  addRemoveToBookmarkEventListener() {
+    document.getElementById('save-action-container').innerHTML = `
+      <button id="report-detail-remove" type="button" class="btn-orange">Remove from Bookmark</button>
+    `;
+    document.getElementById('report-detail-remove').addEventListener('click', async () => {
+      await this.#presenter.removeReport();
+      await this.#presenter.showSaveButton();
+    });
+  }
+
+  saveToBookmarkSuccessfully(message) {
+    console.log(message);
+  }
+  saveToBookmarkFailed(message) {
+    alert(message);
+  }
+  removeFromBookmarkSuccessfully(message) {
+    console.log(message);
+  }
+  removeFromBookmarkFailed(message) {
+    alert(message);
   }
 }

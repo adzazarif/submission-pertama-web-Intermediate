@@ -4,10 +4,12 @@ export default class DetailStoryPresenter {
   #model;
   #storyId;
   #response;
-  constructor(storyId, content, model) {
+  #dbModel;
+  constructor(storyId, content, model, dbModel) {
     this.#content = content;
     this.#model = model;
     this.#storyId = storyId;
+    this.#dbModel = dbModel;
   }
 
   async getDetailStory() {
@@ -31,12 +33,47 @@ export default class DetailStoryPresenter {
     }
   }
 
+  async #isReportSaved() {
+    return !!(await this.#dbModel.getReportById(this.#storyId));
+  }
+
+  async showSaveButton() {
+    if (await this.#isReportSaved()) {
+      this.#content.addRemoveToBookmarkEventListener();
+      return;
+    }
+    this.#content.addSaveToBookmarkEventListener();
+  }
+
+
+
   async notifyMe() {
     try {
       const response = await simulatePush(this.#response.story.name, this.#response.story.description);
       console.log('notifyMe:', response.message);
     } catch (error) {
       console.error('notifyMe: error:', error);
+    }
+  }
+
+  async saveReport() {
+    try {
+      const report = await this.#model.getDetailStory(this.#storyId);
+      await this.#dbModel.putReport(report.story);
+      this.#content.saveToBookmarkSuccessfully('Success to save to bookmark');
+    } catch (error) {
+      console.error('saveReport: error:', error);
+      this.#content.saveToBookmarkFailed(error.message);
+    }
+  }
+
+  async removeReport() {
+    try {
+      await this.#dbModel.removeReport(this.#storyId);
+      this.#content.removeFromBookmarkSuccessfully('Success to remove from bookmark');
+    } catch (error) {
+      console.error('removeReport: error:', error);
+      this.#content.removeFromBookmarkFailed(error.message);
     }
   }
 }

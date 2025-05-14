@@ -6,3 +6,28 @@ self.addEventListener('message', (event) => {
     });
   }
 });
+
+// async function precacheResources() {
+//   const cache = await caches.open('v1');
+ 
+//   await cache.addAll([
+//     '/index.html'
+//   ]);
+// }
+ 
+// self.addEventListener('install', (event) => {
+//   event.waitUntil(precacheResources());
+// });
+
+self.addEventListener('install', function (event) {
+  event.waitUntil(
+    caches.open('mysite-static-v3').then(function (cache) {
+      return cache.addAll([
+        '/app.css',
+        '/index.html',
+        '/app.bundle.js',
+        // etc.
+      ]);
+    }),
+  );
+});

@@ -6,7 +6,6 @@ import { getLogout } from "./utils/auth";
 
 import { registerServiceWorker } from './utils';
 
-
 document.addEventListener("DOMContentLoaded", async () => {
   const app = new App({
     content: document.querySelector("#main-content"),

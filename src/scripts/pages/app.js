@@ -3,6 +3,7 @@ import { getActiveRoute } from "../routes/url-parser";
 import { getAccessToken } from "../utils/auth";
 import { isServiceWorkerAvailable } from "../utils";
 import { isCurrentPushSubscriptionAvailable, subscribe, unsubscribe } from "../utils/notification-helper";
+import NotFoundPage from "./not-found/not-found-pages";
 
 class App {
   #content = null;
@@ -55,6 +56,14 @@ class App {
     }
   }
 
+  #hiddenNav() {
+    const header = document.getElementById("header");
+    const footer = document.getElementById("footer");
+  
+    header.style.display = "none";
+    footer.style.display = "none";
+  }
+
   _setupDrawer() {
     this.#drawerButton.addEventListener("click", () => {
       this.#navigationDrawer.classList.toggle("open");
@@ -78,10 +87,20 @@ class App {
 
   async renderPage() {
     const url = getActiveRoute();
-    const page = routes[url];
-
+    let page = routes[url];
+    console.log('Active route:', url);
+    console.log('Page found:', page);
     if (typeof page === "function") {
       page = page();
+    }
+
+     // Tambahkan logika jika page tidak ditemukan
+    if (page === undefined) {
+      this.#hiddenNav();
+      page = new NotFoundPage();
+      console.error("Page not found:", url);
+    }else{
+      this.#hashNav();
     }
 
     const loadContent = async () => {
@@ -89,7 +108,7 @@ class App {
 
       if (typeof page.afterRender === "function") {
         await page.afterRender();
-        this.#hashNav();
+        // this.#hashNav();
         if (isServiceWorkerAvailable()) {
           this.#setupPushNotification();
         }

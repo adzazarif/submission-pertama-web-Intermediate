@@ -50,7 +50,6 @@ export default class DetailStoryPresenter {
   async notifyMe() {
     try {
       const response = await simulatePush(this.#response.story.name, this.#response.story.description);
-      console.log('notifyMe:', response.message);
     } catch (error) {
       console.error('notifyMe: error:', error);
     }

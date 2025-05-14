@@ -21,6 +21,7 @@ const urlsToCache = [
   './favicon.png',
   './images/logo.png',
   './manifest.json',
+  './sw.bundle.js',
 ];
 
 self.addEventListener('install', (event) => {

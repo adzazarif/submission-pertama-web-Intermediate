@@ -1,3 +1,5 @@
+import { simulatePush } from "../../utils/notification-helper";
+import { isCurrentPushSubscriptionAvailable } from "../../utils/notification-helper";
 export default class AddStoryPresenter {
   #content;
   #model;
@@ -23,6 +25,13 @@ export default class AddStoryPresenter {
         return;
       }
 
+      const isSubscribed = await isCurrentPushSubscriptionAvailable();
+      if (isSubscribed) {
+        console.log("isSubscribed");
+        
+        await this.notifyMe();
+      };
+
       this.#content.addStorySuccessfully(response.message);
     } catch (error) {
       console.log("addStory: error:", error);
@@ -31,4 +40,12 @@ export default class AddStoryPresenter {
       this.#content.hideSubmitButtonLoading();
     }
   }
+
+    async notifyMe() {
+      try {
+        const response = await simulatePush("New Story", "Data baru telah ditambahkan");
+      } catch (error) {
+        console.error('notifyMe: error:', error);
+      }
+    }
 }

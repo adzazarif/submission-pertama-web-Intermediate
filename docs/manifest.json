@@ -1,7 +1,7 @@
 {
     "name": "Aplikasi Cerita",
     "short_name": "Cerita",
-    "start_url": "/",
+    "start_url": "/submission-web-Intermediate",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#6200ee",
@@ -17,7 +17,7 @@
         "name": "Home",
         "short_name": "Home",
         "description": "Menuju ke halaman Home page",
-        "url": "/#/",
+        "url": "/",
         "icons": [{ "src": "images/icons/logo.png", "sizes": "512x512", "type": "image/png" }]
       }
     ],

@@ -14,10 +14,10 @@
     ],
     "shortcuts": [
       {
-        "name": "Tambah Cerita",
-        "short_name": "Tambah",
-        "description": "Langsung menuju halaman tambah cerita",
-        "url": "/#/add-story",
+        "name": "Home",
+        "short_name": "Home",
+        "description": "Menuju ke halaman Home page",
+        "url": "/#/",
         "icons": [{ "src": "images/icons/logo.png", "sizes": "512x512", "type": "image/png" }]
       }
     ],

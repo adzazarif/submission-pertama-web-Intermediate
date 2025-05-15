@@ -1,7 +1,7 @@
 {
     "name": "Aplikasi Cerita",
     "short_name": "Cerita",
-    "start_url": "/",
+    "start_url": "/submission-web-Intermediate",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#6200ee",
@@ -14,10 +14,10 @@
     ],
     "shortcuts": [
       {
-        "name": "Home",
-        "short_name": "Home",
-        "description": "Menuju ke halaman Home page",
-        "url": "/submission-web-Intermediate/#/",
+        "name": "Tambah Cerita",
+        "short_name": "Tambah Cerita",
+        "description": "Menuju ke halaman Tambah Cerita",
+        "url": "/submission-web-Intermediate/#/add-story",
         "icons": [{ "src": "images/icons/logo.png", "sizes": "512x512", "type": "image/png" }]
       }
     ],
